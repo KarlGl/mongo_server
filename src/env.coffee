@@ -1,7 +1,5 @@
 module.exports = {
-  mem:
-    settings:
-      enabled: 't'
+  mem: {}
   l:
     '_': require('lodash')
 }
