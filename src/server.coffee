@@ -3,10 +3,29 @@ module.exports = (app, env)->
   bodyParser = require('body-parser')
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({extended: true}))
-
+  app.use((req, res, next)->
+    res.header('Access-Control-Allow-Headers': 'accept, content-type')
+    res.header('Access-Control-Allow-Credentials': 'true')
+    res.header("Access-Control-Allow-Origin", req.headers.origin);
+    #res.header("Allow", "POST,GET,HEAD,OPTIONS");
+    res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    next();
+  );
   dbConnect = require('./db_connect')(env)
 
   app.post '/clear', (req, res)->
+    dbConnect (db, closeCallback)->
+      db.collection('proudness').remove({}
+      , (err, result)->
+        console.log(result)
+        if err
+          console.log(err)
+        console.log("Removed " + result + " documents in the document collection");
+        closeCallback()
+        res.json(result)
+      )
+  
+  app.post '/seed', (req, res)->
     console.log('say goodbye to all records')
     dbConnect (db, closeCallback)->
       # collection.find({}).toArray(function(err, docs) {
@@ -21,17 +40,17 @@ module.exports = (app, env)->
         d=new Date()
 
         data = [
-          [15, 0.4],
-          [14, 0.35],
-          [13, 0.4],
-          [11, 0.43],
-          [9, 0.5],
-          [8, 0.4],
-          [7, 0.6],
-          [4, 0.84],
-          [3, 0.90],
-          [2, 0.93],
-          [1, 0.8],
+          [15, 4],
+          [14, 35],
+          [13, 40],
+          [11,43],
+          [9, 50],
+          [8, 40],
+          [7, 60],
+          [4, 84],
+          [3, 90],
+          [2, 93],
+          [1, 60],
         ].map( (turple)->
           h = new Date(d.getFullYear(), d.getMonth(), d.getDate() - turple[0], d.getHours(), 0, 0, 0).getTime()
           {proud: turple[1], time: h}
