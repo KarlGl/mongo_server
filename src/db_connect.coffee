@@ -5,7 +5,7 @@ module.exports = (env)->
     assert = require('assert')
 
     # // Connection URL
-    url = 'mongodb://163.47.16.20:27017/test'
+    url = 'mongodb://localhost:27017/test'
      # Use connect method to connect to the Server
     MongoClient.connect(url, (err, db)->
       assert.equal(null, err)
